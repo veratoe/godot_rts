@@ -21,7 +21,7 @@ func set_destination(value: Vector2):
 
 func _ready():
 	set_process(true)
-	position = Vector2(32, 32)
+	position = Vector2(320, 160)
 	float_position = position
 	pass # Replace with function body.
 

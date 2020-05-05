@@ -1,27 +1,55 @@
-extends TileMap
+extends Node2D
+
+export(Vector2) var map_size = Vector2(100, 100)
 
 onready var astar = AStar2D.new()
 
-var size: Vector2 = Vector2(100, 100)
+onready var terrain = get_node("terrain")
+onready var buildings = get_node("buildings")
 
-var walkable_cells : Array = [
-	0, # dirt road
-	2, # gras
+# LELIJK! Maar ik weet niet wat voor type de world node2d wordt, dus 
+# maar even een dummy tilemap node
+
+var map = TileMap.new()
+
+
+func world_to_map(point: Vector2):
+	return map.world_to_map(point)
 	
+func map_to_world(point: Vector2):
+	return map.map_to_world(point)
+	
+# ---- einde LELIJK -----
+
+var walkable_terrain : Array = [
+	2, # grass	,
+	23, # blue_flowers
 ]
 
-var weights: Dictionary = {
-	0: 1,
-	2: 1,
+var walkable_buildings : Array = [
+	-1, # leeg
+	0, # dirt_road
+]
+
+var weights: Dictionary = {	
+	0: 1.0,
+	2: 3.0,
 }
 
 func get_weight(point: Vector2):
-	var cell = get_cellv(world_to_map(point))
-	return weights[cell]
+	var cell = buildings.get_cellv(world_to_map(point))
+	if weights.has(cell):
+		return weights[cell]
+	cell = terrain.get_cellv(world_to_map(point))
+	if weights.has(cell):
+		return weights[cell]
+	
+	return 1
 
-export(Vector2) var map_size = Vector2(100, 100)
+
 # Called when the node enters the scene tree for the first time.
 func _ready():
+	map.cell_size = Vector2(16, 16)
 	initialize_astar()
 
 func calculate_index(point: Vector2) -> int:
@@ -32,11 +60,20 @@ func initialize_astar():
 		
 	for y in range(map_size.y):
 		for x in range(map_size.x):
-			var cell = get_cell(x, y)
-			if walkable_cells.has(cell):
-				var point = Vector2(x, y)
-				points.append(point)
-				astar.add_point(calculate_index(point), point, weights[cell])
+			var point = Vector2(x, y)
+			
+			var building_cell = buildings.get_cellv(point)
+			if !walkable_buildings.has(building_cell):				
+				continue
+			
+				
+			var terrain_cell = terrain.get_cellv(point)
+			if !walkable_terrain.has(terrain_cell):
+				#print("cell not walkable: ", cell)
+				continue
+			
+			points.append(point)		
+			astar.add_point(calculate_index(point), point, get_weight(map_to_world(point)))
 	
 	var dx 
 	var dy
@@ -62,11 +99,9 @@ func initialize_astar():
 
 				# aanvullende check voor diagonale verbindingen
 				if (x == 0 or x == 2) and (y == 0 or y == 2):
-					if not astar.has_point(calculate_index(Vector2(point.x + x - 1, point.y))):
-						print('diagonaal past niet')
+					if not astar.has_point(calculate_index(Vector2(point.x + x - 1, point.y))):						
 						continue
-					if not astar.has_point(calculate_index(Vector2(point.x, point.y + y - 1))):
-						print('diagonaal past niet')
+					if not astar.has_point(calculate_index(Vector2(point.x, point.y + y - 1))):						
 						continue
 
 				astar.connect_points( calculate_index(point),  calculate_index(neighbor), true)

@@ -1,6 +1,6 @@
 extends Node2D
 
-onready var size = get_parent().size
+onready var size = get_parent().map_size
 
 func _draw():
 	pass
