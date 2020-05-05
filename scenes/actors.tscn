@@ -7,6 +7,7 @@
 [ext_resource path="res://scripts/actor.gd" type="Script" id=5]
 
 [sub_resource type="RectangleShape2D" id=1]
+extents = Vector2( 8, 8 )
 
 [sub_resource type="SpriteFrames" id=2]
 animations = [ {
@@ -16,16 +17,23 @@ animations = [ {
 "speed": 5.0
 } ]
 
-[node name="players" type="Node2D"]
-
-[node name="Area2D" type="Area2D" parent="."]
+[node name="actor" type="Area2D"]
 script = ExtResource( 5 )
 
-[node name="player2" type="CollisionShape2D" parent="Area2D"]
-position = Vector2( 0, -10 )
+[node name="ColorRect" type="ColorRect" parent="."]
+visible = false
+margin_right = 16.0
+margin_bottom = 16.0
+color = Color( 1, 1, 1, 0.294118 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2( 8, 8 )
 shape = SubResource( 1 )
 
-[node name="AnimatedSprite" type="AnimatedSprite" parent="Area2D/player2"]
-position = Vector2( 0, -6 )
+[node name="AnimatedSprite" type="AnimatedSprite" parent="."]
+position = Vector2( 5, 0 )
 frames = SubResource( 2 )
-[connection signal="area_entered" from="Area2D" to="Area2D" method="_on_Area2D_area_entered"]
+[connection signal="area_entered" from="." to="." method="_on_Area2D_area_entered"]
