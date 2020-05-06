@@ -15,7 +15,6 @@ var pathfinder
 
 var map : TileMap = TileMap.new()
 
-
 func world_to_map(point: Vector2):
 	return map.world_to_map(point)
 	
@@ -25,10 +24,9 @@ func map_to_world(point: Vector2):
 # ---- einde LELIJK -----
 
 
-func _ready():
+func _ready():	
 	map.cell_size = Vector2(16, 16)
 
-	
 	# dit mooier maken	
 
 	pathfinder = Pathfinder.new()
@@ -38,3 +36,6 @@ func _ready():
 	pathfinder.terrain = get_node("terrain")
 	
 	pathfinder.initialize_astar()
+
+func is_walkable(point : Vector2) -> bool:
+	return pathfinder.is_walkable(map.world_to_map(point))

@@ -4,13 +4,14 @@ export(float) var tooltip_timeout_threshold : float = 3.0
 
 onready var parent = get_parent()
 
-onready var tooltip = get_node("tooltip")
+onready var tooltip = get_node("tooltip/PanelContainer")
 
 
 var tooltip_timeout : float
 
 
 func _ready():
+	tooltip.get_node("Label").text = "Boop!"
 	set_process(true)
 
 
@@ -29,7 +30,10 @@ func _input(event):
 
 func _draw():
 	draw_rect(Rect2(parent.map_to_world(parent.world_to_map(get_global_mouse_position())), Vector2(16, 16)), Color(1.0, 1.0, 1.0, 0.3), false)
-	tooltip.set_position(get_local_mouse_position() + Vector2(8, -8))
+	tooltip.set_position(Vector2( 
+		round(get_local_mouse_position().x + 16), 
+		round(get_local_mouse_position().y - 8)))
+	
 	pass
 	#for x in range(size.x):
 	#	draw_line(Vector2(x * 16, 0), Vector2(x * 16, size.y * 16), Color(1.0, 1.0, 1.0, 0.1))

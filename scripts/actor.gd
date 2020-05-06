@@ -1,102 +1,112 @@
-extends Area2D
+extends Node2D
 
-export var speed = 40
+
+
+export var speed = 20
 # Called when the node enters the scene tree for the first time.
 var destination: Vector2 setget set_destination
 
-onready var world = get_tree().get_root().get_node("root/world")
+var world
+var next_point : Vector2
+
+var type : int
 
 var has_destination : bool = false
 var is_moving : bool = false
 
 var route_points : PoolVector2Array # world coordinates
+var route_index : int
 
 var velocity : Vector2
 var float_position : Vector2
 
 func set_destination(value: Vector2):
+	has_destination = false
 	# mooi afronden van de getallekes
 	destination = world.map_to_world(world.world_to_map(value))
-	find_path()
+	
+	if !find_path():
+		return
+		
+	if route_points.size() > 1:
+		has_destination = true
+		next_point = route_points[1]
+		route_index = 1
+	
+func initialize(type : int, world : Node2D, position : Vector2):
+	self.type = type
+	self.world = world
+	self.position = world.map_to_world(world.world_to_map(position))
+	add_to_group("actors")
 
 func _ready():
-	set_process(true)
-	position = Vector2(320, 160)
+	$AnimatedSprite.set_sprite_frames(ActorsManager.sprite_frames[self.type])
 	float_position = position
-	pass # Replace with function body.
+	route_points.resize(1000)
 
+func find_path():
+	if !world.pathfinder.initialized:
+		return
+	var path = world.pathfinder.find_path(position, destination)
+	if !path:
+		return
+	route_points = path
+	return true
 
-# Called every frame. 'delta' is the elapsed time since the previous frame.
-func _process(delta):
-	if has_destination:		
-		move(delta)
-		
+	
+func _process(delta: float):
+	
 	$AnimatedSprite.flip_h = velocity.x < 0
-		
+
 	if is_moving:
-		pass
 		$AnimatedSprite.play()
 	else: 
 		$AnimatedSprite.stop()
 		$AnimatedSprite.frame = 0
 		
-	update()
-
-func find_path():
-	route_points = world.pathfinder.find_path(position, destination)
 	
-func move(delta: float):
-	var point: Vector2
+	
+	if !has_destination:	
+		if randi() % 10 == 0:	
+			self.destination = Vector2(randi() % 800, randi() % 500)
+		return
 	
 	is_moving = true
-	
+
 	if position == destination:
 		has_destination = false
 		is_moving = false
 		return
-	
-	if route_points.size() > 1:	
-		point = route_points[1]
-		if position == point:
-			route_points.remove(1)
-			point = route_points[1]
-					
-	elif route_points.size() > 0:
-		point = destination
-	else:
-		print("no route")
-		is_moving = false
-		has_destination = false
-		return
-	
-	
-	var weight = world.pathfinder.get_weight(position)
-
-	velocity = (point - position).normalized()
-	velocity *= delta * speed / weight
 		
-	float_position += velocity.clamped((point - position).length())
+	if route_index > route_points.size() - 1:
+		has_destination = false
+		is_moving = false
+		return
+
+	next_point = route_points[route_index]
+
+	if position == next_point:
+		route_index += 1
+		return
+
+	velocity = (next_point - position).normalized()
+	velocity *= delta * speed
+
+	float_position += velocity.clamped((next_point - position).length())
+		
 	position.x = round(float_position.x)
 	position.y = round(float_position.y)
+
+
 	
 
 	
-func _draw():
-	draw_rect(Rect2(destination - position, Vector2(16, 16)), Color(0.5, 0.5, 1.0, 0.2))
-	
-	for point in route_points:
-		draw_rect(Rect2(point - position, Vector2(16, 16)), Color(1.0, 0.0, 0.0, 0.2))
+#func _draw():
+#	draw_rect(Rect2(destination - position, Vector2(16, 16)), Color(0.5, 0.5, 1.0, 0.2))
+
+
+
+
+func _on_actor_area_entered(area):
 	pass
-
-func _unhandled_input(event):
-	if event is InputEventKey:
-		pass
-	else:
-		if Input.is_action_pressed("ui_click_left"):
-			has_destination = true
-			self.destination = get_global_mouse_position()
-			
-# doet niks??
-func _on_Area2D_area_entered():
-	print('wubbels')
-	pass # Replace with function body.
+	

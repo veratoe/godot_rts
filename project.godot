@@ -19,9 +19,17 @@ config/name="rts"
 run/main_scene="res://scenes/root.tscn"
 config/icon="res://icon.png"
 
+[autoload]
+
+ActorsManager="*res://scripts/actors_manager.gd"
+
 [display]
 
 window/stretch/shrink=3.0
+
+[gui]
+
+theme/custom_font="res://font.tres"
 
 [input]
 
@@ -48,6 +56,16 @@ ui_camera_up={
 ui_camera_down={
 "deadzone": 0.5,
 "events": [ Object(InputEventKey,"resource_local_to_scene":false,"resource_name":"","device":0,"alt":false,"shift":false,"control":false,"meta":false,"command":false,"pressed":false,"scancode":83,"unicode":0,"echo":false,"script":null)
+ ]
+}
+create_actor={
+"deadzone": 0.5,
+"events": [ Object(InputEventKey,"resource_local_to_scene":false,"resource_name":"","device":0,"alt":false,"shift":false,"control":false,"meta":false,"command":false,"pressed":false,"scancode":16777244,"unicode":0,"echo":false,"script":null)
+ ]
+}
+remove_actors={
+"deadzone": 0.5,
+"events": [ Object(InputEventKey,"resource_local_to_scene":false,"resource_name":"","device":0,"alt":false,"shift":false,"control":false,"meta":false,"command":false,"pressed":false,"scancode":16777245,"unicode":0,"echo":false,"script":null)
  ]
 }
 

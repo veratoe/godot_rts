@@ -18,8 +18,10 @@ var walkable_buildings : Array = [
 
 var weights: Dictionary = {	
 	0: 1.0,
-	2: 3.0,
+	2: 1.6,
 }
+
+var initialized : bool = false
 
 func get_weight(point: Vector2):
 	var cell = buildings.get_cellv(map.world_to_map(point))
@@ -34,6 +36,8 @@ func get_weight(point: Vector2):
 
 # Called when the node enters the scene tree for the first time.
 
+func is_walkable(point : Vector2):
+	return astar.has_point(calculate_index(point))
 
 func calculate_index(point: Vector2): 	
 	return point.y * map_size.x + point.x
@@ -89,7 +93,18 @@ func initialize_astar():
 
 				astar.connect_points( calculate_index(point),  calculate_index(neighbor), true)
 
+	self.initialized = true
+
 func find_path(start: Vector2, end: Vector2):
+	if !self.initialized:
+		return 
+		
+	if !astar.has_point(calculate_index(map.world_to_map(start))):
+		return
+		
+	if !astar.has_point(calculate_index(map.world_to_map(end))):
+		return
+		
 	var world_path: Array
 	var path = astar.get_point_path(calculate_index(map.world_to_map(start)), calculate_index(map.world_to_map(end)))
 	for point in path:
