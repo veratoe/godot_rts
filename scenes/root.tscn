@@ -1,7 +1,8 @@
-[gd_scene load_steps=3 format=2]
+[gd_scene load_steps=4 format=2]
 
 [ext_resource path="res://scripts/root.gd" type="Script" id=1]
 [ext_resource path="res://scripts/Camera2D.gd" type="Script" id=2]
+[ext_resource path="res://font.tres" type="DynamicFont" id=3]
 
 [node name="root" type="Node2D"]
 script = ExtResource( 1 )
@@ -10,4 +11,18 @@ script = ExtResource( 1 )
 anchor_mode = 0
 current = true
 smoothing_enabled = true
+smoothing_speed = 6.0
 script = ExtResource( 2 )
+
+[node name="hud" type="CanvasLayer" parent="Camera2D"]
+
+[node name="Label" type="Label" parent="Camera2D/hud"]
+margin_left = 5.78955
+margin_top = 5.44899
+margin_right = 66.7896
+margin_bottom = 19.449
+custom_fonts/font = ExtResource( 3 )
+text = "beautiful love"
+__meta__ = {
+"_edit_use_anchors_": false
+}

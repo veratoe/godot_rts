@@ -1,7 +1,6 @@
 extends Node2D
 
 func _create_world():
-	
 	return preload("res://scenes/world.tscn")
 
 func _create_actors():

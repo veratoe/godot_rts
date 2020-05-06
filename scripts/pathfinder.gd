@@ -1,25 +1,10 @@
-extends Node2D
+var astar = AStar2D.new()
 
-export(Vector2) var map_size = Vector2(100, 100)
+var buildings : TileMap
+var terrain : TileMap
+var map : TileMap
 
-onready var astar = AStar2D.new()
-
-onready var terrain = get_node("terrain")
-onready var buildings = get_node("buildings")
-
-# LELIJK! Maar ik weet niet wat voor type de world node2d wordt, dus 
-# maar even een dummy tilemap node
-
-var map = TileMap.new()
-
-
-func world_to_map(point: Vector2):
-	return map.world_to_map(point)
-	
-func map_to_world(point: Vector2):
-	return map.map_to_world(point)
-	
-# ---- einde LELIJK -----
+var map_size : Vector2
 
 var walkable_terrain : Array = [
 	2, # grass	,
@@ -37,10 +22,10 @@ var weights: Dictionary = {
 }
 
 func get_weight(point: Vector2):
-	var cell = buildings.get_cellv(world_to_map(point))
+	var cell = buildings.get_cellv(map.world_to_map(point))
 	if weights.has(cell):
 		return weights[cell]
-	cell = terrain.get_cellv(world_to_map(point))
+	cell = terrain.get_cellv(map.world_to_map(point))
 	if weights.has(cell):
 		return weights[cell]
 	
@@ -48,11 +33,9 @@ func get_weight(point: Vector2):
 
 
 # Called when the node enters the scene tree for the first time.
-func _ready():
-	map.cell_size = Vector2(16, 16)
-	initialize_astar()
 
-func calculate_index(point: Vector2) -> int:
+
+func calculate_index(point: Vector2): 	
 	return point.y * map_size.x + point.x
 
 func initialize_astar():
@@ -73,7 +56,7 @@ func initialize_astar():
 				continue
 			
 			points.append(point)		
-			astar.add_point(calculate_index(point), point, get_weight(map_to_world(point)))
+			astar.add_point(calculate_index(point), point, get_weight(map.map_to_world(point)))
 	
 	var dx 
 	var dy
@@ -108,9 +91,9 @@ func initialize_astar():
 
 func find_path(start: Vector2, end: Vector2):
 	var world_path: Array
-	var path = astar.get_point_path(calculate_index(world_to_map(start)), calculate_index(world_to_map(end)))
+	var path = astar.get_point_path(calculate_index(map.world_to_map(start)), calculate_index(map.world_to_map(end)))
 	for point in path:
-		world_path.append(map_to_world(point))
+		world_path.append(map.map_to_world(point))
 	
 	return world_path
 
@@ -118,5 +101,7 @@ func _process(delta):
 	update()
 
 
+func update():
+	pass
 			
 		

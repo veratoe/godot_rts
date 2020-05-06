@@ -441,15 +441,9 @@ points = PoolVector2Array( 0.286957, 4.69305, 10.7525, 15.1586, 0, 16 )
 24/autotile/z_index_map = [  ]
 24/occluder_offset = Vector2( 0, 0 )
 24/navigation_offset = Vector2( 0, 0 )
-24/shape_offset = Vector2( 48, 48 )
-24/shape_transform = Transform2D( 1, 0, 0, 1, 48, 48 )
+24/shape_offset = Vector2( 0, 0 )
+24/shape_transform = Transform2D( 1, 0, 0, 1, 0, 0 )
 24/shape_one_way = false
-24/shape_one_way_margin = 1.0
-24/shapes = [ {
-"autotile_coord": Vector2( 0, 0 ),
-"one_way": false,
-"one_way_margin": 1.0,
-"shape": null,
-"shape_transform": Transform2D( 1, 0, 0, 1, 48, 48 )
-} ]
+24/shape_one_way_margin = 0.0
+24/shapes = [  ]
 24/z_index = 0

@@ -43,7 +43,7 @@ func _process(delta):
 	update()
 
 func find_path():
-	route_points = world.find_path(position, destination)
+	route_points = world.pathfinder.find_path(position, destination)
 	
 func move(delta: float):
 	var point: Vector2
@@ -70,7 +70,7 @@ func move(delta: float):
 		return
 	
 	
-	var weight = world.get_weight(position)
+	var weight = world.pathfinder.get_weight(position)
 
 	velocity = (point - position).normalized()
 	velocity *= delta * speed / weight
