@@ -14,8 +14,8 @@ func _ready():
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta):
-	get_node("Label_actors").text = "Actors: %s" % [ActorsManager.get_totals_actors()]
-	get_node("Label_fps").text = "FPS: %s" % str(Engine.get_frames_per_second())
+	get_node("PanelContainer/VBoxContainer/Label_actors").text = "Actors: %s" % [ActorsManager.get_totals_actors()]
+	get_node("PanelContainer/VBoxContainer/Label_fps").text = "FPS: %s" % str(Engine.get_frames_per_second())
 
 
 
