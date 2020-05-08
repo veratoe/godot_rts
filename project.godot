@@ -8,9 +8,20 @@
 
 config_version=4
 
-_global_script_classes=[  ]
+_global_script_classes=[ {
+"base": "Reference",
+"class": "Action",
+"language": "GDScript",
+"path": "res://scripts/action.gd"
+}, {
+"base": "Action",
+"class": "FindFarmAction",
+"language": "GDScript",
+"path": "res://scripts/actions/FindFarm.gd"
+} ]
 _global_script_class_icons={
-
+"Action": "",
+"FindFarmAction": ""
 }
 
 [application]
@@ -22,6 +33,7 @@ config/icon="res://icon.png"
 [autoload]
 
 ActorsManager="*res://scripts/actors_manager.gd"
+GlobalWorld="*res://scenes/world.tscn"
 
 [display]
 

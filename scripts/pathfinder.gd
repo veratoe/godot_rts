@@ -11,9 +11,9 @@ var walkable_terrain : Array = [
 	23, # blue_flowers
 ]
 
-var walkable_buildings : Array = [
-	-1, # leeg
-	0, # dirt_road
+var walkable_buildings : Array = [	
+	"dirt_road",
+	"farm"
 ]
 
 var weights: Dictionary = {	
@@ -50,7 +50,7 @@ func initialize_astar():
 			var point = Vector2(x, y)
 			
 			var building_cell = buildings.get_cellv(point)
-			if !walkable_buildings.has(building_cell):				
+			if building_cell != -1 and !walkable_buildings.has(buildings.tile_set.tile_get_name(building_cell)):				
 				continue
 			
 				

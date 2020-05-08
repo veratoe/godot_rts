@@ -16,6 +16,11 @@ func _ready():
 
 
 func _process(delta: float):
+	tooltip.get_node("Label").text = "(%s, %s)" % [
+		GlobalWorld.world_to_map(get_global_mouse_position()).x,
+		GlobalWorld.world_to_map(get_global_mouse_position()).y
+	]
+	
 	tooltip_timeout += delta
 	if tooltip_timeout > tooltip_timeout_threshold:
 		tooltip.visible = true

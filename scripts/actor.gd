@@ -1,5 +1,7 @@
 extends Node2D
 
+#var FindFarmAction = preload("res://scripts/actions/FindFarm.gd")
+#var WorkFarmAction = load("res://scripts/actions/WorkFarm.gd")
 
 
 export var speed = 20
@@ -19,6 +21,8 @@ var route_index : int
 
 var velocity : Vector2
 var float_position : Vector2
+
+var action : Action
 
 func set_destination(value: Vector2):
 	has_destination = false
@@ -43,7 +47,16 @@ func _ready():
 	$AnimatedSprite.set_sprite_frames(ActorsManager.sprite_frames[self.type])
 	float_position = position
 	route_points.resize(1000)
+	
+	if self.action == null:
+		var action  = FindFarmAction.new(GlobalWorld.world_to_map(position), 20)
+		action.connect("farm_found", self, "on_farm_found")
+		set_action(action)
 
+func on_farm_found(tile : Vector2):
+	set_destination(GlobalWorld.map_to_world(tile))
+	print("farm geveonden op %s" % tile)
+	
 func find_path():
 	if !world.pathfinder.initialized:
 		return
@@ -56,6 +69,10 @@ func find_path():
 	
 func _process(delta: float):
 	
+	# dit moet denk ik naar een action manager?
+	if self.action != null:
+		self.action._process(delta)
+	
 	$AnimatedSprite.flip_h = velocity.x < 0
 
 	if is_moving:
@@ -67,8 +84,8 @@ func _process(delta: float):
 	
 	
 	if !has_destination:	
-		if randi() % 10 == 0:	
-			self.destination = Vector2(randi() % 800, randi() % 500)
+#		if randi() % 10 == 0:	
+#			self.destination = Vector2(randi() % 800, randi() % 500)
 		return
 	
 	is_moving = true
@@ -97,7 +114,9 @@ func _process(delta: float):
 	position.x = round(float_position.x)
 	position.y = round(float_position.y)
 
-
+func set_action(action : Action):
+	self.action = action
+	
 	
 
 	

@@ -42,13 +42,14 @@ func remove_all_actors():
 	for actor in get_tree().get_nodes_in_group("actors"):
 		actor.queue_free()
 
-func create_actor():
+func create_actor(position = null) -> bool:
 	var world = get_tree().get_root().get_node("root/world")
 	var actors = get_tree().get_root().get_node("root/world/actors")
 	
-	var position = Vector2(randi() % 800, randi() % 500)
+	if position == null:
+		position = Vector2(randi() % 800, randi() % 500)
 	if !world.is_walkable(position):
-		return
+		return false
 	# lelijk dat dit dubbel moet
 	var actor = Actor.instance()
 	actor.initialize(
@@ -58,17 +59,8 @@ func create_actor():
 	)
 	
 	actors.add_child(actor)
-
-#func _input(event):
-#	if Input.is_action_just_pressed("create_actor"):
-		#create_actor()
 	
-#	if Input.is_action_pressed("remove_actors"):
-		#remove_all_actors()
-	
-# Called every frame. 'delta' is the elapsed time since the previous frame.
-#func _process(delta):
-#	pass
+	return true
 
 func get_totals_actors():
 	return get_tree().get_nodes_in_group("actors").size()
