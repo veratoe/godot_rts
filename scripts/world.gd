@@ -24,20 +24,21 @@ func map_to_world(point: Vector2):
 # ---- einde LELIJK -----
 
 func _process(delta : float):
-	var farm_tiles = buildings.get_used_cells_by_id(26)
+	var farm_tiles = buildings.get_used_cells_by_id(28)
 	for tile in farm_tiles:
-		if randi() % 1000 == 0:
-			print("growing")
-			buildings.set_cellv(tile, 25)
+		if randi() % 5000 == 0:
+			#print("growing")
+			buildings.set_cellv(tile, 29)
 			
-	farm_tiles = buildings.get_used_cells_by_id(25)
+	farm_tiles = buildings.get_used_cells_by_id(29)
 	for tile in farm_tiles:
-		if randi() % 500 == 0:
-			print("growing again")
-			buildings.set_cellv(tile, 27)
+		if randi() % 5000 == 0:
+			#print(tile, "wordt een farm grown")
+			buildings.set_cellv(tile, 30)
 
 
 func _ready():	
+	SignalsManager.connect("actor_work_farm_completed", self, "_on_actor_work_farm_completed")
 	map.cell_size = Vector2(16, 16)
 
 	# dit mooier maken	
@@ -53,10 +54,20 @@ func _ready():
 func is_walkable(point : Vector2) -> bool:
 	return pathfinder.is_walkable(map.world_to_map(point))
 
-func tile_has_building(tile: Vector2, building : String) -> bool:
+func buildings_tile_name(tile: Vector2) -> String:
 	if tile.x > map_size.x or tile.x < 0 or tile.y > map_size.y or tile.y < 0:
-		return false
+		return "empty"
 	var i = pathfinder.buildings.get_cellv(tile)
-	var name = pathfinder.buildings.tile_set.tile_get_name(i)
-	return name == building
+	return pathfinder.buildings.tile_set.tile_get_name(i)	
+
+func tile_has_building(tile: Vector2, building : String) -> bool:
+	var name = buildings_tile_name(tile)
+	if (name == building):
+		print(name, building, tile)
+		return true
+	return false
 	
+func _on_actor_work_farm_completed(farm: Vector2):
+	print("farmpje leeggoiien")
+	buildings.set_cellv(farm, 26)
+

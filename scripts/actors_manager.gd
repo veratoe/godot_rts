@@ -64,3 +64,7 @@ func create_actor(position = null) -> bool:
 
 func get_totals_actors():
 	return get_tree().get_nodes_in_group("actors").size()
+
+func _input(event):
+	if event is InputEventMouseButton and event.pressed == true and event.button_index == BUTTON_LEFT:
+		SignalsManager.emit_signal("actor_deselected")

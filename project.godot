@@ -14,14 +14,44 @@ _global_script_classes=[ {
 "language": "GDScript",
 "path": "res://scripts/action.gd"
 }, {
+"base": "Area2D",
+"class": "Actor",
+"language": "GDScript",
+"path": "res://scripts/actor.gd"
+}, {
+"base": "Task",
+"class": "FarmTask",
+"language": "GDScript",
+"path": "res://scripts/actions/FarmTask.gd"
+}, {
 "base": "Action",
 "class": "FindFarmAction",
 "language": "GDScript",
 "path": "res://scripts/actions/FindFarm.gd"
+}, {
+"base": "Action",
+"class": "MoveAction",
+"language": "GDScript",
+"path": "res://scripts/actions/move.gd"
+}, {
+"base": "Reference",
+"class": "Task",
+"language": "GDScript",
+"path": "res://scripts/task.gd"
+}, {
+"base": "Action",
+"class": "WorkFarmAction",
+"language": "GDScript",
+"path": "res://scripts/actions/WorkFarm.gd"
 } ]
 _global_script_class_icons={
 "Action": "",
-"FindFarmAction": ""
+"Actor": "",
+"FarmTask": "",
+"FindFarmAction": "",
+"MoveAction": "",
+"Task": "",
+"WorkFarmAction": ""
 }
 
 [application]
@@ -34,6 +64,7 @@ config/icon="res://icon.png"
 
 ActorsManager="*res://scripts/actors_manager.gd"
 GlobalWorld="*res://scenes/world.tscn"
+SignalsManager="*res://scripts/signals_manager.gd"
 
 [display]
 

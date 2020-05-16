@@ -1,12 +1,14 @@
-extends Node2D
+class_name Actor
+extends Area2D
 
 #var FindFarmAction = preload("res://scripts/actions/FindFarm.gd")
 #var WorkFarmAction = load("res://scripts/actions/WorkFarm.gd")
 
-
 export var speed = 20
 # Called when the node enters the scene tree for the first time.
 var destination: Vector2 setget set_destination
+
+var is_selected : bool
 
 var world
 var next_point : Vector2
@@ -22,8 +24,17 @@ var route_index : int
 var velocity : Vector2
 var float_position : Vector2
 
-var action : Action
+var task : Task
 
+var Task = preload("res://scripts/task.gd")
+
+func set_map_destination(destination : Vector2):
+	set_destination(world.map_to_world(destination))
+
+func get_map_destination():
+	return world.world_to_map(destination)
+
+# verhuizen naar MoveAction?
 func set_destination(value: Vector2):
 	has_destination = false
 	# mooi afronden van de getallekes
@@ -44,18 +55,13 @@ func initialize(type : int, world : Node2D, position : Vector2):
 	add_to_group("actors")
 
 func _ready():
+	SignalsManager.connect("actor_deselected", self, "_on_actor_deselected")
+	
 	$AnimatedSprite.set_sprite_frames(ActorsManager.sprite_frames[self.type])
 	float_position = position
 	route_points.resize(1000)
 	
-	if self.action == null:
-		var action  = FindFarmAction.new(GlobalWorld.world_to_map(position), 20)
-		action.connect("farm_found", self, "on_farm_found")
-		set_action(action)
-
-func on_farm_found(tile : Vector2):
-	set_destination(GlobalWorld.map_to_world(tile))
-	print("farm geveonden op %s" % tile)
+	self.task = FarmTask.new(self)
 	
 func find_path():
 	if !world.pathfinder.initialized:
@@ -65,13 +71,13 @@ func find_path():
 		return
 	route_points = path
 	return true
-
 	
 func _process(delta: float):
+	$PanelContainer/Label.text = str(self.task)
 	
 	# dit moet denk ik naar een action manager?
-	if self.action != null:
-		self.action._process(delta)
+	if self.task != null:
+		self.task._process(delta)
 	
 	$AnimatedSprite.flip_h = velocity.x < 0
 
@@ -114,18 +120,29 @@ func _process(delta: float):
 	position.x = round(float_position.x)
 	position.y = round(float_position.y)
 
-func set_action(action : Action):
-	self.action = action
-	
-	
 
 	
 #func _draw():
 #	draw_rect(Rect2(destination - position, Vector2(16, 16)), Color(0.5, 0.5, 1.0, 0.2))
 
+func _on_actor_mouse_entered():
+	SignalsManager.emit_signal("actor_mouse_enter", self)
 
+func _on_actor_mouse_exited():
+	SignalsManager.emit_signal("actor_mouse_exit", self)
 
+func _on_actor_input_event(viewport: Node, event: InputEvent, shape_idx: int):
+	if (event is InputEventMouseButton && event.pressed):
+		self._on_actor_selected()
+		
 
-func _on_actor_area_entered(area):
-	pass
+func _on_actor_selected():
+	is_selected = true
+	$PanelContainer.set_visible(true)
+	SignalsManager.emit_signal("actor_selected", self)
+	
+func _on_actor_deselected():
+	is_selected = false
+	$PanelContainer.set_visible(false)
+	#SignalsManager.emit_signal("actor_deselected", self)
 	

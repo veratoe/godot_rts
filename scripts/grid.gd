@@ -8,17 +8,35 @@ onready var tooltip = get_node("tooltip/PanelContainer")
 
 
 var tooltip_timeout : float
+var actor
+var is_mouse_over_actor : float
 
+func set_tooltip(text: String):
+	tooltip.get_node("Label").text = text
+
+#func _on_actor_mouse_enter(actor):
+#	self.actor = actor
+#	is_mouse_over_actor = true
+#
+#func _on_actor_mouse_exit(actor):
+#	self.actor = null
+#	is_mouse_over_actor = false
 
 func _ready():
-	tooltip.get_node("Label").text = "Boop!"
+#	SignalsManager.connect("actor_mouse_enter", self, "_on_actor_mouse_enter")
+#	SignalsManager.connect("actor_mouse_exit", self, "_on_actor_mouse_exit")
 	set_process(true)
 
 
 func _process(delta: float):
-	tooltip.get_node("Label").text = "(%s, %s)" % [
-		GlobalWorld.world_to_map(get_global_mouse_position()).x,
-		GlobalWorld.world_to_map(get_global_mouse_position()).y
+	var tile = GlobalWorld.world_to_map(
+		get_global_mouse_position()
+	)
+#	if is_mouse_over_actor:
+#		set_tooltip(str(actor.task))
+#	else:
+	tooltip.get_node("Label").text = "%s, %s" % [
+		tile, GlobalWorld.buildings_tile_name(tile)
 	]
 	
 	tooltip_timeout += delta
