@@ -33,9 +33,9 @@ func _process(delta : float):
 	if self.status == Status.COMPLETE:
 		return
 		
-	print("%s tot %s" % [position.x - radius, position.x + radius])
-	print("%s tot %s" % [position.y - radius, position.y + radius])
-		
+#	print("%s tot %s" % [position.x - radius, position.x + radius])
+#	print("%s tot %s" % [position.y - radius, position.y + radius])
+#
 	for x in range(position.x - radius, position.x + radius):
 		for y in range(position.y - radius, position.y + radius):
 			var dx = x - position.x
@@ -47,12 +47,10 @@ func _process(delta : float):
 #				continue
 				
 			var point = Vector2(x, y)
-			print(point)
 			
 			#print("from %s, looking at point %s" % [position, point])
 				
-			if GlobalWorld.tile_has_building(point, "farm_grown"):	
-				print(point)		
+			if _World.tile_has_building(point, "farm_grown"):	
 				if closest == -1 or d < closest:
 					closest = d
 					tile = point

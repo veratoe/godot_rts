@@ -43,22 +43,27 @@ func remove_all_actors():
 		actor.queue_free()
 
 func create_actor(position = null) -> bool:
-	var world = get_tree().get_root().get_node("root/world")
-	var actors = get_tree().get_root().get_node("root/world/actors")
 	
 	if position == null:
 		position = Vector2(randi() % 800, randi() % 500)
-	if !world.is_walkable(position):
+	if !_World.is_walkable(position):
 		return false
 	# lelijk dat dit dubbel moet
 	var actor = Actor.instance()
 	actor.initialize(
 		randi() % (types.size() - 1),
-		world, 
 		position		#Vector2(randi() % 1600, randi() % 500)
 	)
+		
+	_World.get_node("actors").add_child(actor)
 	
-	actors.add_child(actor)
+#	actor = Actor.instance()
+#	actor.initialize(
+#		randi() % (types.size() - 1),
+#		_World.map_to_world(Vector2(60, 20))
+#	)
+#
+#	_World.get_node("actors").add_child(actor)
 	
 	return true
 

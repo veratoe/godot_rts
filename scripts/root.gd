@@ -7,15 +7,12 @@ func _create_actors():
 #	while !ActorsManager.create_actor():
 #		ActorsManager.create_actor()
 		
-	ActorsManager.create_actor(GlobalWorld.map_to_world(Vector2(54, 13)))
+	ActorsManager.create_actor(_World.map_to_world(Vector2(54, 13)))
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	randomize()
 
-	var world = _create_world()
-	add_child(world.instance())
-	
 	_create_actors()
 
 	pass # Replace with function body.

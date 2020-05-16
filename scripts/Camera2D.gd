@@ -2,7 +2,7 @@ extends Camera2D
 
 
 # Declare member variables here. Examples:
-var step : int = 100
+var step : int = 50
 # var b = "text"
 var is_drag : bool = false
 

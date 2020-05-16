@@ -1,6 +1,6 @@
 extends Node2D
 
-export(float) var tooltip_timeout_threshold : float = 3.0
+export(float) var tooltip_timeout_threshold : float = 0.3
 
 onready var parent = get_parent()
 
@@ -23,20 +23,20 @@ func set_tooltip(text: String):
 #	is_mouse_over_actor = false
 
 func _ready():
-#	SignalsManager.connect("actor_mouse_enter", self, "_on_actor_mouse_enter")
-#	SignalsManager.connect("actor_mouse_exit", self, "_on_actor_mouse_exit")
 	set_process(true)
 
 
 func _process(delta: float):
-	var tile = GlobalWorld.world_to_map(
+	var tile = _World.world_to_map(
 		get_global_mouse_position()
 	)
+	
+#	pathfinder.buildings.get_cellv(tile)
 #	if is_mouse_over_actor:
 #		set_tooltip(str(actor.task))
 #	else:
 	tooltip.get_node("Label").text = "%s, %s" % [
-		tile, GlobalWorld.buildings_tile_name(tile)
+		tile, _World.buildings.get_cellv(tile)
 	]
 	
 	tooltip_timeout += delta
@@ -57,6 +57,17 @@ func _draw():
 		round(get_local_mouse_position().x + 16), 
 		round(get_local_mouse_position().y - 8)))
 	
+
+	#SignalsManager.emit_signal("actor_deselected", self)
+
+#	for tile in _World.buildings.get_used_cells_by_id(28):
+#		draw_rect(Rect2(_World.map_to_world(tile), Vector2(16, 16)), Color(0, 255, 0, 0.2), true)
+#
+#	for tile in  _World.buildings.get_used_cells_by_id(29):
+#		draw_rect(Rect2(_World.map_to_world(tile), Vector2(16, 16)), Color(255, 0 , 0, 0.2), true)
+#
+#	for tile in  _World.buildings.get_used_cells_by_id(30):
+#		draw_rect(Rect2(_World.map_to_world(tile), Vector2(16, 16)), Color(0, 0, 255, 0.2), true)
 	pass
 	#for x in range(size.x):
 	#	draw_line(Vector2(x * 16, 0), Vector2(x * 16, size.y * 16), Color(1.0, 1.0, 1.0, 0.1))

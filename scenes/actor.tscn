@@ -1,9 +1,17 @@
 [gd_scene load_steps=4 format=2]
 
-[ext_resource path="res://styles/ui_panel.tres" type="StyleBox" id=1]
 [ext_resource path="res://scripts/actor.gd" type="Script" id=5]
 
 [sub_resource type="RectangleShape2D" id=1]
+
+[sub_resource type="StyleBoxFlat" id=2]
+bg_color = Color( 0.282353, 0.65098, 0.709804, 1 )
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color( 0.8, 0.8, 0.8, 0 )
+corner_detail = 1
 
 [node name="actor" type="Area2D"]
 z_index = 100
@@ -16,19 +24,14 @@ shape = SubResource( 1 )
 [node name="AnimatedSprite" type="AnimatedSprite" parent="."]
 position = Vector2( 5, 0 )
 
-[node name="PanelContainer" type="PanelContainer" parent="."]
+[node name="ProgressBar" type="ProgressBar" parent="."]
 visible = false
-margin_top = -20.0
-margin_right = 14.0
-margin_bottom = -6.0
-custom_styles/panel = ExtResource( 1 )
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="Label" type="Label" parent="PanelContainer"]
-margin_right = 14.0
-margin_bottom = 14.0
+margin_top = -8.0
+margin_right = 16.0
+margin_bottom = -3.0
+custom_styles/fg = SubResource( 2 )
+value = 30.0
+percent_visible = false
 __meta__ = {
 "_edit_use_anchors_": false
 }

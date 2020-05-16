@@ -10,7 +10,6 @@ var destination: Vector2 setget set_destination
 
 var is_selected : bool
 
-var world
 var next_point : Vector2
 
 var type : int
@@ -28,17 +27,23 @@ var task : Task
 
 var Task = preload("res://scripts/task.gd")
 
+func get_status() -> String:
+	if task != null:
+		return task._to_string()
+	
+	return "idle"
+
 func set_map_destination(destination : Vector2):
-	set_destination(world.map_to_world(destination))
+	set_destination(_World.map_to_world(destination))
 
 func get_map_destination():
-	return world.world_to_map(destination)
+	return _World.world_to_map(destination)
 
 # verhuizen naar MoveAction?
 func set_destination(value: Vector2):
 	has_destination = false
 	# mooi afronden van de getallekes
-	destination = world.map_to_world(world.world_to_map(value))
+	destination = _World.map_to_world(_World.world_to_map(value))
 	
 	if !find_path():
 		return
@@ -48,14 +53,13 @@ func set_destination(value: Vector2):
 		next_point = route_points[1]
 		route_index = 1
 	
-func initialize(type : int, world : Node2D, position : Vector2):
-	self.type = type
-	self.world = world
-	self.position = world.map_to_world(world.world_to_map(position))
+func initialize(type : int, position : Vector2):
+	self.type = type	
+	self.position = _World.map_to_world(_World.world_to_map(position))
 	add_to_group("actors")
 
 func _ready():
-	SignalsManager.connect("actor_deselected", self, "_on_actor_deselected")
+#	SignalsManager.connect("actor_deselected", self, "_on_actor_deselected")
 	
 	$AnimatedSprite.set_sprite_frames(ActorsManager.sprite_frames[self.type])
 	float_position = position
@@ -64,16 +68,15 @@ func _ready():
 	self.task = FarmTask.new(self)
 	
 func find_path():
-	if !world.pathfinder.initialized:
+	if !_World.pathfinder.initialized:
 		return
-	var path = world.pathfinder.find_path(position, destination)
+	var path = _World.pathfinder.find_path(position, destination)
 	if !path:
 		return
 	route_points = path
 	return true
 	
 func _process(delta: float):
-	$PanelContainer/Label.text = str(self.task)
 	
 	# dit moet denk ik naar een action manager?
 	if self.task != null:
@@ -133,16 +136,22 @@ func _on_actor_mouse_exited():
 
 func _on_actor_input_event(viewport: Node, event: InputEvent, shape_idx: int):
 	if (event is InputEventMouseButton && event.pressed):
-		self._on_actor_selected()
+#		self._on_actor_selected()
+		print("click!")
+		SignalsManager.emit_signal("actor_selected", self)
+		
+		
 		
 
-func _on_actor_selected():
-	is_selected = true
-	$PanelContainer.set_visible(true)
-	SignalsManager.emit_signal("actor_selected", self)
+#func _on_actor_selected():
+#	pass
+#	is_selected = true
+#	$PanelContainer.set_visible(true)
+#	SignalsManager.emit_signal("actor_selected", self)
 	
-func _on_actor_deselected():
-	is_selected = false
-	$PanelContainer.set_visible(false)
+#func _on_actor_deselected():
+#	pass
+#	is_selected = false
+#	$PanelContainer.set_visible(false)
 	#SignalsManager.emit_signal("actor_deselected", self)
 	
