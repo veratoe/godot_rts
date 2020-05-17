@@ -1,0 +1,62 @@
+[gd_scene load_steps=8 format=2]
+
+[ext_resource path="res://scenes/magic.gd" type="Script" id=1]
+
+[sub_resource type="CanvasItemMaterial" id=1]
+
+[sub_resource type="Gradient" id=2]
+offsets = PoolRealArray( 0, 0.409756, 0.726829, 0.936585, 0.97561, 1 )
+colors = PoolColorArray( 0.827451, 0.819608, 0.184314, 0.717647, 0.921569, 0.423529, 0.423529, 0.643137, 0.486275, 0.219608, 0.729412, 0.733333, 1, 1, 1, 1, 0.860587, 0.860587, 0.860587, 1, 0.191406, 0.191406, 0.191406, 1 )
+
+[sub_resource type="GradientTexture" id=3]
+gradient = SubResource( 2 )
+width = 256
+
+[sub_resource type="Curve" id=6]
+max_value = 4.0
+_data = [ Vector2( 0, 2.11364 ), 0.0, 0.0, 0, 0, Vector2( 1, 0.95 ), 0.0, 0.0, 0, 0 ]
+
+[sub_resource type="CurveTexture" id=7]
+curve = SubResource( 6 )
+
+[sub_resource type="ParticlesMaterial" id=10]
+trail_divisor = 50
+emission_shape = 1
+emission_sphere_radius = 10.0
+flag_disable_z = true
+direction = Vector3( 1, 1, 0 )
+spread = 0.0
+gravity = Vector3( 0, 0, 0 )
+orbit_velocity = 1.0
+orbit_velocity_random = 0.35
+tangential_accel = -5.0
+tangential_accel_random = 0.5
+scale_curve = SubResource( 7 )
+color_ramp = SubResource( 3 )
+
+[node name="ViewportContainer" type="ViewportContainer"]
+material = SubResource( 1 )
+margin_right = 120.0
+margin_bottom = 120.0
+rect_min_size = Vector2( 120, 120 )
+stretch = true
+script = ExtResource( 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Viewport" type="Viewport" parent="."]
+size = Vector2( 120, 120 )
+transparent_bg = true
+handle_input_locally = false
+render_target_update_mode = 3
+
+[node name="Particles2D" type="Particles2D" parent="Viewport"]
+position = Vector2( 20, 20 )
+emitting = false
+amount = 1000
+lifetime = 4.0
+one_shot = true
+explosiveness = 0.35
+fixed_fps = 30
+process_material = SubResource( 10 )

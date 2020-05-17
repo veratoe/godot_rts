@@ -10,11 +10,15 @@ var tween : Tween
 
 var type
 
+var audio_player : AudioStreamPlayer2D
+var pop_sound = preload("res://sounds/pop.wav")
+
 # Declare member variables here. Examples:
 # var a = 2
 # var b = "text"
 func _init(type, position: Vector2):
-
+	audio_player = AudioStreamPlayer2D.new()
+	add_child(audio_player)
 	frames = icon_frames
 	scale = Vector2(0.1, 0.1)
 	self.position = position
@@ -22,7 +26,7 @@ func _init(type, position: Vector2):
 	
 	set_frame(16)
 	
-
+	
 	
 	#set_process(true)
 
@@ -34,6 +38,8 @@ func _draw():
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	
+	audio_player.set_stream(pop_sound)
+	audio_player.play(0)
 	
 	#self.position = position
 #	sprite.show()

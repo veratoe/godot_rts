@@ -2,7 +2,7 @@ class_name WorkFarmAction
  
 extends Action
 
-const FARM_DURATION : float = 10.0
+const FARM_DURATION : float = 1.0
 
 var actor
 
