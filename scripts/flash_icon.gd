@@ -24,7 +24,7 @@ func _init(type, position: Vector2):
 	self.position = position
 	centered = false
 	
-	set_frame(16)
+	set_frame(5)
 	
 	
 	
